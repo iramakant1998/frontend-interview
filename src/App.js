@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
+  const [cur, setCur] = useState(0);
+  const [percent, setPercent] = useState(0);
+
+  useEffect(() => {
+    setPercent(Math.min(100, Math.max(cur, 0)));
+  }, [cur]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCur((val) => (val < 100 ? val + 1 : 100));
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <span>Progress Bar</span>
+      <div className="wrapper">
+        <div 
+          className="progress-done"
+          style={{ transform: `scaleX(${percent / 100})` , transformOrigin : "left" }}
         >
-          Learn React
-        </a>
-      </header>
+          <span>{percent}%</span>
+        </div>
+      </div>
     </div>
   );
 }
